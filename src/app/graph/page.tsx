@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import { fetchPaginatedEvents, fetchGraphData } from '@/lib/api/events';
@@ -24,6 +24,9 @@ export default function GraphPage() {
   const [nodeLimit, setNodeLimit] = useState<number>(100);
   const [minScore, setMinScore] = useState<number>(0.5);
   const [groupByEventType, setGroupByEventType] = useState<boolean>(false);
+
+  // Debounce timer for hover events to prevent excessive re-renders
+  const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Fetch graph data (entities + events + edges) from AllegroGraph
   const { data: graphData, isLoading, error } = useQuery({
@@ -85,6 +88,32 @@ export default function GraphPage() {
     filtered: filteredEvents.length,
     selected: filters.selectedTypes.length,
   };
+
+  // Memoized node click handler - no debouncing needed for clicks
+  const handleNodeClick = useCallback((node: any) => {
+    if (node.group === 'event') {
+      const event = events.find(e => e.eventId === node.id);
+      if (event) setSelectedEvent(event);
+    }
+  }, [events]);
+
+  // Debounced hover handler to prevent excessive re-renders
+  const handleNodeHover = useCallback((node: any) => {
+    // Clear any pending hover timeout
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+    }
+
+    // Debounce hover updates by 100ms
+    hoverTimeoutRef.current = setTimeout(() => {
+      if (node && node.group === 'event') {
+        const event = events.find(e => e.eventId === node.id);
+        setHoveredEvent(event || null);
+      } else {
+        setHoveredEvent(null);
+      }
+    }, 100);
+  }, [events]);
 
   return (
     <main className="min-h-screen pt-16" style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)' }}>
@@ -273,20 +302,8 @@ export default function GraphPage() {
                 nodes={nodes}
                 edges={edges}
                 filteredEventIds={filteredEvents.map(e => e.eventId)}
-                onNodeClick={(node) => {
-                  if (node.group === 'event') {
-                    const event = events.find(e => e.eventId === node.id);
-                    if (event) setSelectedEvent(event);
-                  }
-                }}
-                onNodeHover={(node) => {
-                  if (node && node.group === 'event') {
-                    const event = events.find(e => e.eventId === node.id);
-                    setHoveredEvent(event || null);
-                  } else {
-                    setHoveredEvent(null);
-                  }
-                }}
+                onNodeClick={handleNodeClick}
+                onNodeHover={handleNodeHover}
                 layout={layout}
                 groupByEventType={groupByEventType}
               />
