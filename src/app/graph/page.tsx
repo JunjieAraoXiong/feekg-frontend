@@ -12,7 +12,7 @@ import { Event } from '@/lib/api/types';
 
 export default function GraphPage() {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
-  const [hoveredEvent, setHoveredEvent] = useState<Event | null>(null);
+  const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'details' | 'connections'>('details');
   const [filters, setFilters] = useState<FilterState>({
     startDate: '',
@@ -24,9 +24,6 @@ export default function GraphPage() {
   const [nodeLimit, setNodeLimit] = useState<number>(100);
   const [minScore, setMinScore] = useState<number>(0.5);
   const [groupByEventType, setGroupByEventType] = useState<boolean>(false);
-
-  // Debounce timer for hover events to prevent excessive re-renders
-  const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Fetch graph data (entities + events + edges) from AllegroGraph
   const { data: graphData, isLoading, error } = useQuery({
@@ -89,30 +86,16 @@ export default function GraphPage() {
     selected: filters.selectedTypes.length,
   };
 
-  // Memoized node click handler - no debouncing needed for clicks
+  // Memoized node click handler - instant response, no glitching
   const handleNodeClick = useCallback((node: any) => {
     if (node.group === 'event') {
       const event = events.find(e => e.eventId === node.id);
-      if (event) setSelectedEvent(event);
-    }
-  }, [events]);
-
-  // Debounced hover handler to prevent excessive re-renders
-  const handleNodeHover = useCallback((node: any) => {
-    // Clear any pending hover timeout
-    if (hoverTimeoutRef.current) {
-      clearTimeout(hoverTimeoutRef.current);
-    }
-
-    // Debounce hover updates by 100ms
-    hoverTimeoutRef.current = setTimeout(() => {
-      if (node && node.group === 'event') {
-        const event = events.find(e => e.eventId === node.id);
-        setHoveredEvent(event || null);
-      } else {
-        setHoveredEvent(null);
+      if (event) {
+        setSelectedEvent(event);
+        setSelectedEventId(event.eventId);
+        setViewMode('details'); // Reset to details view on new selection
       }
-    }, 100);
+    }
   }, [events]);
 
   return (
@@ -302,8 +285,8 @@ export default function GraphPage() {
                 nodes={nodes}
                 edges={edges}
                 filteredEventIds={filteredEvents.map(e => e.eventId)}
+                selectedNodeId={selectedEventId}
                 onNodeClick={handleNodeClick}
-                onNodeHover={handleNodeHover}
                 layout={layout}
                 groupByEventType={groupByEventType}
               />
@@ -328,16 +311,14 @@ export default function GraphPage() {
               />
             ) : (
               <EventCard
-                event={selectedEvent || hoveredEvent}
+                event={selectedEvent}
                 onClose={() => {
                   setSelectedEvent(null);
+                  setSelectedEventId(null);
                   setViewMode('details');
                 }}
                 onViewConnections={() => {
-                  if (selectedEvent || hoveredEvent) {
-                    if (!selectedEvent && hoveredEvent) {
-                      setSelectedEvent(hoveredEvent);
-                    }
+                  if (selectedEvent) {
                     setViewMode('connections');
                   }
                 }}
