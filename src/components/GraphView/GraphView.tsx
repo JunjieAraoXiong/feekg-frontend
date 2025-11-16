@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useMemo } from 'react';
+import { useEffect, useRef, useState, useMemo, memo } from 'react';
 import cytoscape, { Core, NodeSingular, EventObject } from 'cytoscape';
 import { Node, Edge } from '@/lib/api/types';
 import { COLORS, LAYOUTS } from '@/lib/constants';
@@ -16,7 +16,7 @@ interface GraphViewProps {
   className?: string;
 }
 
-export function GraphView({
+const GraphViewComponent = ({
   nodes,
   edges,
   filteredEventIds,
@@ -25,7 +25,7 @@ export function GraphView({
   layout = 'cose',
   groupByEventType = false,
   className = '',
-}: GraphViewProps) {
+}: GraphViewProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const cyRef = useRef<Core | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
@@ -596,4 +596,18 @@ export function GraphView({
       )}
     </div>
   );
-}
+};
+
+// Memoize the component to prevent re-renders when parent state changes
+// Only re-render if nodes, edges, filteredEventIds, layout, or groupByEventType change
+export const GraphView = memo(GraphViewComponent, (prevProps, nextProps) => {
+  return (
+    prevProps.nodes === nextProps.nodes &&
+    prevProps.edges === nextProps.edges &&
+    prevProps.filteredEventIds === nextProps.filteredEventIds &&
+    prevProps.layout === nextProps.layout &&
+    prevProps.groupByEventType === nextProps.groupByEventType
+    // Note: onNodeClick and onNodeHover are intentionally excluded
+    // They're memoized with useCallback in the parent
+  );
+});
