@@ -243,11 +243,7 @@ export function GraphView({
           style: {
             'border-width': 5,
             'border-color': '#a5b4fc',
-            'font-size': (ele: any) => {
-              const group = ele.data('group');
-              // Slightly larger on hover
-              return group === 'entity' ? 11 : 10;
-            },
+            // Don't change font-size on hover - causes layout shifts
             'z-index': 999,
           },
         },
@@ -382,14 +378,14 @@ export function GraphView({
         },
         nestingFactor: 5,
         gravity: groupByEventType ? 0.5 : 0.8,
-        numIter: 500, // Reduced from 2000 for faster settling
-        initialTemp: 300,
+        numIter: 300, // Further reduced for instant settling
+        initialTemp: 200,
         coolingFactor: 0.95,
         minTemp: 1.0,
         // Randomize initial positions to avoid clustering (unless grouping by type)
         randomize: !groupByEventType,
-        animate: true,
-        animationDuration: 300, // Reduced from 500 for snappier feel
+        animate: false, // Disable animations completely to prevent glitching
+        animationDuration: 0, // No animation
       } : LAYOUTS[layout],
       minZoom: 0.3,
       maxZoom: 3,

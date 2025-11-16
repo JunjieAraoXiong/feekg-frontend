@@ -58,9 +58,9 @@ export function FilterPanel({
     filters.searchQuery;
 
   return (
-    <div className={`bg-white/80 backdrop-blur-xl rounded-2xl shadow-apple-lg p-8 border border-gray-100/50 ${className}`}>
-      <div className="flex items-center justify-between mb-8">
-        <h3 className="text-lg font-semibold text-gray-900">Filters</h3>
+    <div className={`bg-white/80 backdrop-blur-xl rounded-2xl shadow-apple-lg p-4 border border-gray-100/50 ${className}`}>
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-sm font-semibold text-gray-900">Filters</h3>
         {hasActiveFilters && (
           <button
             onClick={clearFilters}
@@ -72,8 +72,8 @@ export function FilterPanel({
       </div>
 
       {/* Search */}
-      <div className="mb-8">
-        <label className="block text-sm font-medium text-gray-700 mb-3">
+      <div className="mb-4">
+        <label className="block text-xs font-medium text-gray-700 mb-2">
           Search Events
         </label>
         <input
@@ -86,8 +86,8 @@ export function FilterPanel({
       </div>
 
       {/* Date Range */}
-      <div className="mb-8">
-        <label className="block text-sm font-medium text-gray-700 mb-3">
+      <div className="mb-4">
+        <label className="block text-xs font-medium text-gray-700 mb-2">
           Date Range
         </label>
         <div className="grid grid-cols-2 gap-3">
@@ -114,7 +114,7 @@ export function FilterPanel({
 
       {/* Event Types */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-3">
+        <label className="block text-xs font-medium text-gray-700 mb-2">
           Event Types
         </label>
         <div className="space-y-2 max-h-64 overflow-y-auto">
@@ -139,8 +139,8 @@ export function FilterPanel({
 
       {/* Active Filters Summary */}
       {hasActiveFilters && (
-        <div className="mt-8 pt-8 border-t border-gray-200/50">
-          <p className="text-xs font-medium text-gray-600 mb-3">Active Filters:</p>
+        <div className="mt-4 pt-4 border-t border-gray-200/50">
+          <p className="text-xs font-medium text-gray-600 mb-2">Active Filters:</p>
           <div className="flex flex-wrap gap-2">
             {filters.searchQuery && (
               <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-blue-100 text-blue-700 text-xs rounded-full shadow-sm hover:shadow-md transition-shadow">

@@ -22,7 +22,6 @@ export default function GraphPage() {
   const [nodeLimit, setNodeLimit] = useState<number>(100);
   const [minScore, setMinScore] = useState<number>(0.5);
   const [groupByEventType, setGroupByEventType] = useState<boolean>(false);
-  const [dateRange, setDateRange] = useState({ startDate: '', endDate: '' });
 
   // Fetch graph data (entities + events + edges) from AllegroGraph
   const { data: graphData, isLoading, error } = useQuery({
@@ -60,14 +59,6 @@ export default function GraphPage() {
       filtered = filtered.filter(e => e.date <= filters.endDate);
     }
 
-    // Additional date range filter from header controls
-    if (dateRange.startDate) {
-      filtered = filtered.filter(e => e.date >= dateRange.startDate);
-    }
-    if (dateRange.endDate) {
-      filtered = filtered.filter(e => e.date <= dateRange.endDate);
-    }
-
     // Event type filter
     if (filters.selectedTypes.length > 0) {
       filtered = filtered.filter(e => filters.selectedTypes.includes(e.type));
@@ -84,7 +75,7 @@ export default function GraphPage() {
     }
 
     return filtered;
-  }, [events, filters, dateRange]);
+  }, [events, filters]);
 
   // Stats
   const stats = {
@@ -169,36 +160,6 @@ export default function GraphPage() {
                 </label>
               </div>
             </div>
-
-            {/* Date Range Filter Row */}
-            <div className="flex items-center justify-end gap-4 mt-3 pt-3 border-t border-gray-200/50">
-              <span className="text-sm text-gray-600 font-medium">Date Range:</span>
-              <div className="flex items-center gap-2">
-                <input
-                  type="date"
-                  value={dateRange.startDate}
-                  onChange={(e) => setDateRange({ ...dateRange, startDate: e.target.value })}
-                  className="px-3 py-1.5 text-sm border border-gray-300/50 rounded-lg bg-gray-50/50 hover:bg-white focus:bg-white focus:ring-2 focus:ring-blue-500/50 transition-all shadow-apple"
-                  placeholder="Start Date"
-                />
-                <span className="text-gray-400">to</span>
-                <input
-                  type="date"
-                  value={dateRange.endDate}
-                  onChange={(e) => setDateRange({ ...dateRange, endDate: e.target.value })}
-                  className="px-3 py-1.5 text-sm border border-gray-300/50 rounded-lg bg-gray-50/50 hover:bg-white focus:bg-white focus:ring-2 focus:ring-blue-500/50 transition-all shadow-apple"
-                  placeholder="End Date"
-                />
-                {(dateRange.startDate || dateRange.endDate) && (
-                  <button
-                    onClick={() => setDateRange({ startDate: '', endDate: '' })}
-                    className="px-3 py-1.5 text-sm text-blue-600 hover:text-blue-700 font-medium active:scale-95 transition-all"
-                  >
-                    Clear
-                  </button>
-                )}
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -233,16 +194,16 @@ export default function GraphPage() {
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-12 gap-8 p-8 h-[calc(100vh-120px)]">
+        <div className="grid grid-cols-12 gap-4 p-4 h-[calc(100vh-120px)]">
           {/* Left Sidebar - Filters */}
-          <div className="col-span-3 overflow-y-auto">
+          <div className="col-span-2 overflow-y-auto">
             <FilterPanel
               onFilterChange={setFilters}
               eventTypes={eventTypes}
             />
 
             {/* Stats Card */}
-            <div className="mt-8 bg-white/80 backdrop-blur-xl rounded-2xl shadow-apple-lg p-8 border border-gray-100/50">
+            <div className="mt-6 bg-white/80 backdrop-blur-xl rounded-2xl shadow-apple-lg p-4 border border-gray-100/50">
               <h3 className="text-sm font-semibold text-gray-900 mb-6">Graph Statistics</h3>
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
@@ -274,7 +235,7 @@ export default function GraphPage() {
             </div>
 
             {/* Legend */}
-            <div className="mt-8 bg-white/80 backdrop-blur-xl rounded-2xl shadow-apple-lg p-8 border border-gray-100/50">
+            <div className="mt-6 bg-white/80 backdrop-blur-xl rounded-2xl shadow-apple-lg p-4 border border-gray-100/50">
               <h3 className="text-sm font-semibold text-gray-900 mb-6">Legend</h3>
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
@@ -304,7 +265,7 @@ export default function GraphPage() {
           </div>
 
           {/* Center - Graph View */}
-          <div className="col-span-6">
+          <div className="col-span-7">
             <div className="rounded-2xl shadow-apple-xl h-full overflow-hidden">
               <GraphView
                 nodes={nodes}
