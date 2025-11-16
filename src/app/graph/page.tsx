@@ -7,11 +7,13 @@ import { fetchPaginatedEvents, fetchGraphData } from '@/lib/api/events';
 import { GraphView } from '@/components/GraphView';
 import { FilterPanel, FilterState } from '@/components/FilterPanel';
 import { EventCard } from '@/components/EventCard';
+import { ConnectionsView } from '@/components/ConnectionsView';
 import { Event } from '@/lib/api/types';
 
 export default function GraphPage() {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [hoveredEvent, setHoveredEvent] = useState<Event | null>(null);
+  const [viewMode, setViewMode] = useState<'details' | 'connections'>('details');
   const [filters, setFilters] = useState<FilterState>({
     startDate: '',
     endDate: '',
@@ -291,12 +293,39 @@ export default function GraphPage() {
             </div>
           </div>
 
-          {/* Right Sidebar - Event Details */}
+          {/* Right Sidebar - Event Details or Connections */}
           <div className="col-span-3 overflow-y-auto">
-            <EventCard
-              event={selectedEvent || hoveredEvent}
-              onClose={() => setSelectedEvent(null)}
-            />
+            {viewMode === 'connections' && selectedEvent ? (
+              <ConnectionsView
+                event={selectedEvent}
+                edges={edges}
+                allEvents={events}
+                onBack={() => setViewMode('details')}
+                onEventClick={(eventId) => {
+                  const event = events.find(e => e.eventId === eventId);
+                  if (event) {
+                    setSelectedEvent(event);
+                    setViewMode('details');
+                  }
+                }}
+              />
+            ) : (
+              <EventCard
+                event={selectedEvent || hoveredEvent}
+                onClose={() => {
+                  setSelectedEvent(null);
+                  setViewMode('details');
+                }}
+                onViewConnections={() => {
+                  if (selectedEvent || hoveredEvent) {
+                    if (!selectedEvent && hoveredEvent) {
+                      setSelectedEvent(hoveredEvent);
+                    }
+                    setViewMode('connections');
+                  }
+                }}
+              />
+            )}
           </div>
         </div>
       )}

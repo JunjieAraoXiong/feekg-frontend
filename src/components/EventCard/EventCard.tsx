@@ -1,20 +1,18 @@
 "use client";
 
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Event } from '@/lib/api/types';
 import { COLORS } from '@/lib/constants';
-import { ConnectionsModal } from '@/components/ConnectionsModal';
 
 interface EventCardProps {
   event: Event | null;
   onClose?: () => void;
+  onViewConnections?: () => void;
   className?: string;
 }
 
-export function EventCard({ event, onClose, className = '' }: EventCardProps) {
+export function EventCard({ event, onClose, onViewConnections, className = '' }: EventCardProps) {
   const router = useRouter();
-  const [showConnectionsModal, setShowConnectionsModal] = useState(false);
   if (!event) {
     return (
       <div className={`bg-white/80 backdrop-blur-xl rounded-2xl shadow-apple-lg p-8 border border-gray-100/50 ${className}`}>
@@ -134,7 +132,7 @@ export function EventCard({ event, onClose, className = '' }: EventCardProps) {
       <div className="px-8 py-6 bg-gray-50/30 border-t border-gray-200/50 rounded-b-2xl">
         <div className="flex gap-3">
           <button
-            onClick={() => setShowConnectionsModal(true)}
+            onClick={onViewConnections}
             className="flex-1 px-4 py-3 bg-blue-500 text-white text-sm font-semibold rounded-xl hover:bg-blue-600 active:scale-95 hover:shadow-md transition-all duration-200 shadow-apple"
           >
             View Connections
@@ -147,13 +145,6 @@ export function EventCard({ event, onClose, className = '' }: EventCardProps) {
           </button>
         </div>
       </div>
-
-      {/* Connections Modal */}
-      <ConnectionsModal
-        event={event}
-        isOpen={showConnectionsModal}
-        onClose={() => setShowConnectionsModal(false)}
-      />
     </div>
   );
 }
