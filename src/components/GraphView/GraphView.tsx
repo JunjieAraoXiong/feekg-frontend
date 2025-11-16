@@ -9,8 +9,8 @@ interface GraphViewProps {
   nodes: Node[];
   edges: Edge[];
   filteredEventIds?: string[];
+  selectedNodeId?: string | null;
   onNodeClick?: (node: Node) => void;
-  onNodeHover?: (node: Node | null) => void;
   layout?: 'cose' | 'circle' | 'grid' | 'breadthfirst';
   groupByEventType?: boolean;
   className?: string;
@@ -20,8 +20,8 @@ const GraphViewComponent = ({
   nodes,
   edges,
   filteredEventIds,
+  selectedNodeId,
   onNodeClick,
-  onNodeHover,
   layout = 'cose',
   groupByEventType = false,
   className = '',
@@ -33,15 +33,13 @@ const GraphViewComponent = ({
   const initializingRef = useRef(false);
   const layoutRunningRef = useRef(false);
 
-  // Store event handlers in refs to prevent re-initialization
+  // Store event handler in ref to prevent re-initialization
   const onNodeClickRef = useRef(onNodeClick);
-  const onNodeHoverRef = useRef(onNodeHover);
 
-  // Update refs when handlers change
+  // Update ref when handler changes
   useEffect(() => {
     onNodeClickRef.current = onNodeClick;
-    onNodeHoverRef.current = onNodeHover;
-  }, [onNodeClick, onNodeHover]);
+  }, [onNodeClick]);
 
   // Memoize graph data to prevent unnecessary re-initialization
   const graphData = useMemo(() => {
@@ -248,6 +246,15 @@ const GraphViewComponent = ({
           },
         },
         {
+          // Selected node highlighting - bright amber border
+          selector: 'node.selected',
+          style: {
+            'border-width': 8,
+            'border-color': '#fbbf24', // Bright amber/gold color
+            'z-index': 1000, // Always on top
+          },
+        },
+        {
           selector: 'edge',
           style: {
             'width': (ele: any) => {
@@ -440,25 +447,8 @@ const GraphViewComponent = ({
       }
     });
 
-    cy.on('mouseover', 'node', (evt: EventObject) => {
-      if (!isMountedRef.current) return;
-      try {
-        const node = evt.target as NodeSingular;
-        const nodeData = node.data('nodeData') as Node;
-        if (onNodeHoverRef.current && nodeData) {
-          onNodeHoverRef.current(nodeData);
-        }
-      } catch (e) {
-        // Ignore errors from destroyed nodes
-      }
-    });
-
-    cy.on('mouseout', 'node', () => {
-      if (!isMountedRef.current) return;
-      if (onNodeHoverRef.current) {
-        onNodeHoverRef.current(null);
-      }
-    });
+    // Hover events removed - no more sidebar glitching
+    // Tooltip will be shown via native browser tooltip (title attribute)
 
   };
 
@@ -551,6 +541,27 @@ const GraphViewComponent = ({
     }
   }, [layout, isInitialized]);
 
+  // Highlight selected node
+  useEffect(() => {
+    const cy = cyRef.current;
+    if (!cy || !isInitialized) return;
+
+    try {
+      // Remove previous selection highlighting
+      cy.nodes().removeClass('selected');
+
+      // Add selection highlighting to selected node
+      if (selectedNodeId) {
+        const selectedNode = cy.getElementById(selectedNodeId);
+        if (selectedNode && selectedNode.length > 0) {
+          selectedNode.addClass('selected');
+        }
+      }
+    } catch (e) {
+      // Ignore errors
+    }
+  }, [selectedNodeId, isInitialized]);
+
   // Component mount tracking
   useEffect(() => {
     isMountedRef.current = true;
@@ -607,7 +618,8 @@ export const GraphView = memo(GraphViewComponent, (prevProps, nextProps) => {
     prevProps.filteredEventIds === nextProps.filteredEventIds &&
     prevProps.layout === nextProps.layout &&
     prevProps.groupByEventType === nextProps.groupByEventType
-    // Note: onNodeClick and onNodeHover are intentionally excluded
-    // They're memoized with useCallback in the parent
+    // Note: selectedNodeId and onNodeClick are intentionally excluded
+    // - selectedNodeId: handled by useEffect, no re-render needed
+    // - onNodeClick: memoized with useCallback in parent
   );
 });
