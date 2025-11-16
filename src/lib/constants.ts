@@ -35,14 +35,14 @@ export const LAYOUTS = {
   cose: {
     name: 'cose',
     animate: true,
-    animationDuration: 500,
+    animationDuration: 300,
     padding: 50,
     nodeRepulsion: 8000,
     idealEdgeLength: 100,
     edgeElasticity: 100,
     nestingFactor: 5,
     gravity: 80,
-    numIter: 1000,
+    numIter: 500,
     initialTemp: 200,
     coolingFactor: 0.95,
     minTemp: 1.0,
@@ -50,7 +50,7 @@ export const LAYOUTS = {
   circle: {
     name: 'circle',
     animate: true,
-    animationDuration: 600,
+    animationDuration: 300,
     padding: 80,
     // Nodes arranged in concentric circles
     spacingFactor: 1.8,
@@ -60,7 +60,7 @@ export const LAYOUTS = {
   grid: {
     name: 'grid',
     animate: true,
-    animationDuration: 500,
+    animationDuration: 300,
     padding: 60,
     // Auto-calculate rows/cols for square-ish grid
     rows: undefined,
@@ -79,7 +79,7 @@ export const LAYOUTS = {
   breadthfirst: {
     name: 'breadthfirst',
     animate: true,
-    animationDuration: 600,
+    animationDuration: 300,
     padding: 80,
     directed: true,
     // Temporal flow: top to bottom

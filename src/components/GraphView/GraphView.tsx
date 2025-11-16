@@ -33,6 +33,16 @@ export function GraphView({
   const initializingRef = useRef(false);
   const layoutRunningRef = useRef(false);
 
+  // Store event handlers in refs to prevent re-initialization
+  const onNodeClickRef = useRef(onNodeClick);
+  const onNodeHoverRef = useRef(onNodeHover);
+
+  // Update refs when handlers change
+  useEffect(() => {
+    onNodeClickRef.current = onNodeClick;
+    onNodeHoverRef.current = onNodeHover;
+  }, [onNodeClick, onNodeHover]);
+
   // Memoize graph data to prevent unnecessary re-initialization
   const graphData = useMemo(() => {
     // Filter nodes based on filteredEventIds if provided
@@ -372,14 +382,14 @@ export function GraphView({
         },
         nestingFactor: 5,
         gravity: groupByEventType ? 0.5 : 0.8,
-        numIter: 2000,
-        initialTemp: 500,
+        numIter: 500, // Reduced from 2000 for faster settling
+        initialTemp: 300,
         coolingFactor: 0.95,
         minTemp: 1.0,
         // Randomize initial positions to avoid clustering (unless grouping by type)
         randomize: !groupByEventType,
         animate: true,
-        animationDuration: 500,
+        animationDuration: 300, // Reduced from 500 for snappier feel
       } : LAYOUTS[layout],
       minZoom: 0.3,
       maxZoom: 3,
@@ -417,14 +427,14 @@ export function GraphView({
     setIsInitialized(true);
     initializingRef.current = false;
 
-    // Event handlers with mounted checks
+    // Event handlers with mounted checks - use refs to avoid re-initialization
     cy.on('tap', 'node', (evt: EventObject) => {
       if (!isMountedRef.current) return;
       try {
         const node = evt.target as NodeSingular;
         const nodeData = node.data('nodeData') as Node;
-        if (onNodeClick && nodeData) {
-          onNodeClick(nodeData);
+        if (onNodeClickRef.current && nodeData) {
+          onNodeClickRef.current(nodeData);
         }
       } catch (e) {
         // Ignore errors from destroyed nodes
@@ -436,8 +446,8 @@ export function GraphView({
       try {
         const node = evt.target as NodeSingular;
         const nodeData = node.data('nodeData') as Node;
-        if (onNodeHover && nodeData) {
-          onNodeHover(nodeData);
+        if (onNodeHoverRef.current && nodeData) {
+          onNodeHoverRef.current(nodeData);
         }
       } catch (e) {
         // Ignore errors from destroyed nodes
@@ -446,8 +456,8 @@ export function GraphView({
 
     cy.on('mouseout', 'node', () => {
       if (!isMountedRef.current) return;
-      if (onNodeHover) {
-        onNodeHover(null);
+      if (onNodeHoverRef.current) {
+        onNodeHoverRef.current(null);
       }
     });
 
