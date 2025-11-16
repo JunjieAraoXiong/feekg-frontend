@@ -417,6 +417,9 @@ export function GraphView({
     const initialLayout = cy.layout(LAYOUTS[layout]);
     initialLayout.on('layoutstop', () => {
       layoutRunningRef.current = false;
+
+      // Lock all node positions after layout completes to prevent drift
+      cy.nodes().lock();
     });
     initialLayout.run();
 
@@ -527,12 +530,17 @@ export function GraphView({
           layoutRunningRef.current = false;
         }
 
+        // Unlock nodes before applying new layout
+        cy.nodes().unlock();
+
         // Start new layout
         layoutRunningRef.current = true;
         const newLayout = cy.layout(LAYOUTS[layout]);
         newLayout.on('layoutstop', () => {
           if (isMountedRef.current) {
             layoutRunningRef.current = false;
+            // Lock nodes again after new layout completes
+            cy.nodes().lock();
           }
         });
         newLayout.run();
