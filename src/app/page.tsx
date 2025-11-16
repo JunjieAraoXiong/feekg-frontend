@@ -74,14 +74,12 @@ export default function Home() {
               >
                 View Timeline
               </Link>
-              <a
-                href={`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001"}/docs_hub.html`}
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                href="/docs"
                 className="px-6 py-3 bg-white/10 backdrop-blur-md text-white rounded-xl font-semibold hover:bg-white/20 transition-all duration-200 border border-white/20 text-sm"
               >
                 Documentation
-              </a>
+              </Link>
             </div>
           </div>
         </div>
