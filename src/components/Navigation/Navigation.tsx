@@ -10,7 +10,7 @@ export function Navigation() {
     { name: 'Home', path: '/', icon: HomeIcon },
     { name: 'Graph', path: '/graph', icon: GraphIcon },
     { name: 'Timeline', path: '/timeline', icon: TimelineIcon },
-    { name: 'Docs', path: '/docs_hub.html', icon: DocsIcon, external: true },
+    { name: 'Docs', path: 'https://web-production-cc9f1.up.railway.app/docs_hub.html', icon: DocsIcon, external: true },
   ];
 
   return (
