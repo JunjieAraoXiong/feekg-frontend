@@ -89,8 +89,18 @@ export async function fetchEvolutionLinks(eventId?: string, minScore: number = 0
     params.event_id = eventId;
   }
   const query = buildQueryString(params);
-  const response = await apiClient<{ data: EvolutionLink[] }>(`/api/evolution/links${query}`);
-  return response.data;
+
+  console.log('[fetchEvolutionLinks] Requesting:', `/api/evolution/links${query}`, { eventId, minScore });
+
+  try {
+    const response = await apiClient<{ data: EvolutionLink[] }>(`/api/evolution/links${query}`);
+    console.log('[fetchEvolutionLinks] Response:', response);
+    return response.data || [];
+  } catch (error) {
+    console.error('[fetchEvolutionLinks] Error:', error);
+    // Return empty array instead of throwing to prevent UI breaks
+    return [];
+  }
 }
 
 /**

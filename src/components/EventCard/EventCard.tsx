@@ -66,7 +66,7 @@ export function EventCard({ event, onClose, className = '' }: EventCardProps) {
       </div>
 
       {/* Content */}
-      <div className="p-8 space-y-5">
+      <div className="p-8 space-y-5 overflow-y-auto max-h-[calc(100vh-400px)]">
         {/* Event Type */}
         <div>
           <label className="block text-xs font-medium text-gray-500 mb-1">Event Type</label>

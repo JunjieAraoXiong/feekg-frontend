@@ -15,15 +15,22 @@ export function ConnectionsModal({ event, isOpen, onClose }: ConnectionsModalPro
   if (!isOpen) return null;
 
   // Fetch evolution links for this event
-  const { data: evolutionLinks, isLoading } = useQuery({
+  const { data: evolutionLinks, isLoading, error, isError } = useQuery({
     queryKey: ['evolution-links', event.eventId],
-    queryFn: () => fetchEvolutionLinks(event.eventId, 0.3),
+    queryFn: async () => {
+      console.log('[ConnectionsModal] Fetching evolution links for event:', event.eventId);
+      const links = await fetchEvolutionLinks(event.eventId, 0.3);
+      console.log('[ConnectionsModal] Received links:', links);
+      return links;
+    },
     enabled: isOpen,
   });
 
   // Get links FROM and TO this event
   const linksFrom = evolutionLinks?.filter(link => link.from === event.eventId) || [];
   const linksTo = evolutionLinks?.filter(link => link.to === event.eventId) || [];
+
+  console.log('[ConnectionsModal] Filtered links:', { linksFrom, linksTo, total: evolutionLinks?.length });
 
   // Get unique entities involved
   const entities = new Set([
@@ -65,6 +72,20 @@ export function ConnectionsModal({ event, isOpen, onClose }: ConnectionsModalPro
               <div className="relative h-12 w-12">
                 <div className="absolute inset-0 rounded-full border-4 border-gray-200"></div>
                 <div className="absolute inset-0 rounded-full border-4 border-blue-500 border-t-transparent animate-spin"></div>
+              </div>
+            </div>
+          ) : isError ? (
+            <div className="bg-red-50 border border-red-200 rounded-xl p-6">
+              <div className="flex items-start gap-3">
+                <svg className="w-6 h-6 text-red-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div>
+                  <h4 className="text-red-800 font-semibold mb-1">Failed to Load Evolution Links</h4>
+                  <p className="text-red-600 text-sm mb-2">The backend API endpoint may not be available.</p>
+                  <p className="text-red-600 text-xs font-mono">{error?.toString()}</p>
+                  <p className="text-red-600 text-xs mt-2">Check browser console for details.</p>
+                </div>
               </div>
             </div>
           ) : (
