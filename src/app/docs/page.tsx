@@ -84,6 +84,35 @@ export default function DocsHubPage() {
           </p>
         </div>
 
+        {/* Research Paper */}
+        <div className="research-paper-section">
+          <div className="research-paper-card">
+            <div className="research-paper-header">
+              <svg className="research-paper-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+              </svg>
+              <div>
+                <h2 className="research-paper-title">Research Paper</h2>
+                <p className="research-paper-subtitle">Liu et al. (2024) - April 2024</p>
+              </div>
+            </div>
+            <p className="research-paper-description">
+              "Risk identification and management through knowledge Association: A financial event evolution knowledge graph approach"
+            </p>
+            <a
+              href="/financial_event_evolution_knowledge_graph_approach_-_Apr_2024.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="research-paper-button"
+            >
+              <svg className="button-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              Download PDF
+            </a>
+          </div>
+        </div>
+
         {/* Search & Filter */}
         <div className="terminal-controls">
           <div className="search-box">
@@ -191,6 +220,83 @@ export default function DocsHubPage() {
           padding: 2rem;
           position: relative;
           overflow: hidden;
+        }
+
+        .research-paper-section {
+          margin-bottom: 2rem;
+        }
+
+        .research-paper-card {
+          background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+          border: 2px solid #a3be8c;
+          border-radius: 12px;
+          padding: 2rem;
+          box-shadow: 0 0 30px rgba(163, 190, 140, 0.2);
+        }
+
+        .research-paper-header {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          margin-bottom: 1rem;
+        }
+
+        .research-paper-icon {
+          width: 48px;
+          height: 48px;
+          color: #a3be8c;
+          flex-shrink: 0;
+        }
+
+        .research-paper-title {
+          font-family: 'JetBrains Mono', 'Courier New', monospace;
+          font-size: 20px;
+          font-weight: bold;
+          color: #a3be8c;
+          margin: 0;
+        }
+
+        .research-paper-subtitle {
+          font-family: 'JetBrains Mono', 'Courier New', monospace;
+          font-size: 12px;
+          color: #666;
+          margin: 0;
+        }
+
+        .research-paper-description {
+          font-family: 'JetBrains Mono', 'Courier New', monospace;
+          font-size: 14px;
+          color: #d8dee9;
+          margin-bottom: 1.5rem;
+          line-height: 1.6;
+        }
+
+        .research-paper-button {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+          background: #a3be8c;
+          color: #0a0a0a;
+          padding: 12px 20px;
+          border-radius: 8px;
+          font-family: 'JetBrains Mono', 'Courier New', monospace;
+          font-size: 14px;
+          font-weight: 600;
+          text-decoration: none;
+          transition: all 0.2s;
+          border: none;
+          cursor: pointer;
+        }
+
+        .research-paper-button:hover {
+          background: #b4d09c;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(163, 190, 140, 0.3);
+        }
+
+        .button-icon {
+          width: 20px;
+          height: 20px;
         }
 
         .terminal-page::before {
