@@ -1,196 +1,568 @@
 "use client";
 
-import Link from "next/link";
+import { useState } from 'react';
+import Link from 'next/link';
 
-export default function DocsPage() {
+interface DocItem {
+  title: string;
+  path: string;
+  description: string;
+  category: string;
+}
+
+const DOCS: DocItem[] = [
+  // Main Documentation
+  { title: 'Project Status', path: '/docs/PROJECT_STATUS', description: 'Current project status and progress', category: 'Main' },
+  { title: 'Architecture', path: '/docs/ARCHITECTURE', description: 'System architecture and design', category: 'Main' },
+  { title: 'Frontend Architecture', path: '/docs/FRONTEND_ARCHITECTURE', description: 'Frontend technical architecture', category: 'Main' },
+
+  // Guides
+  { title: 'Graph Interaction Guide', path: '/docs/GRAPH_INTERACTION_GUIDE', description: 'How to interact with the knowledge graph', category: 'Guides' },
+  { title: 'Visualization Guide', path: '/docs/VISUALIZATION_GUIDE', description: 'Using visualization features', category: 'Guides' },
+
+  // Summaries
+  { title: 'Stage 6 Summary', path: '/docs/STAGE6_SUMMARY', description: 'Visualization and API implementation summary', category: 'Summaries' },
+  { title: 'Cleanup Summary', path: '/docs/CLEANUP_SUMMARY', description: 'Code cleanup and optimization summary', category: 'Summaries' },
+  { title: 'Backend Improvements', path: '/docs/BACKEND_IMPROVEMENTS_SUMMARY', description: 'Backend enhancements and optimizations', category: 'Summaries' },
+  { title: 'ABM Demo Results', path: '/docs/ABM_DEMO_RESULTS', description: 'Agent-Based Model demonstration results', category: 'Summaries' },
+  { title: 'Real Data Results', path: '/docs/REAL_DATA_RESULTS', description: 'Results from real Capital IQ data', category: 'Summaries' },
+
+  // Planning & Vision
+  { title: 'Cleanup Plan', path: '/docs/CLEANUP_PLAN', description: 'Codebase cleanup and refactoring plan', category: 'Planning' },
+  { title: 'Dynamic KG Vision', path: '/docs/DYNAMIC_KG_VISION', description: 'Future vision for dynamic knowledge graphs', category: 'Planning' },
+  { title: 'SLM ABM Roadmap', path: '/docs/SLM_ABM_ROADMAP', description: 'Small Language Model and ABM roadmap', category: 'Planning' },
+  { title: 'Future Roadmap', path: '/docs/FUTURE_ROADMAP', description: 'Long-term project roadmap', category: 'Planning' },
+
+  // Technical Reports
+  { title: 'Data Quality Report', path: '/docs/DATA_QUALITY_REPORT', description: 'Capital IQ data quality analysis', category: 'Reports' },
+  { title: 'Graph Visualization Backend Optimization', path: '/docs/GRAPH_VISUALIZATION_BACKEND_OPT', description: 'Backend optimization for graph viz', category: 'Reports' },
+  { title: 'View Documentation', path: '/docs/VIEW', description: 'View layer documentation', category: 'Reports' },
+
+  // AllegroGraph
+  { title: 'AllegroGraph Setup', path: '/docs/docs/ALLEGROGRAPH_SETUP', description: 'Setting up AllegroGraph database', category: 'Database' },
+  { title: 'Visualizations (AllegroGraph)', path: '/docs/docs/VISUALIZATIONS', description: 'Visualization capabilities with AllegroGraph', category: 'Database' },
+
+  // LLM Integration
+  { title: 'LLM README', path: '/docs/llm/README', description: 'LLM integration documentation', category: 'LLM' },
+];
+
+export default function DocsHubPage() {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+
+  // Get unique categories
+  const categories = ['All', ...Array.from(new Set(DOCS.map(doc => doc.category)))];
+
+  // Filter docs based on search and category
+  const filteredDocs = DOCS.filter(doc => {
+    const matchesSearch = doc.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         doc.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = selectedCategory === 'All' || doc.category === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
+
+  // Group by category
+  const groupedDocs = filteredDocs.reduce((acc, doc) => {
+    const cat = doc.category;
+    if (!acc[cat]) acc[cat] = [];
+    acc[cat].push(doc);
+    return acc;
+  }, {} as Record<string, DocItem[]>);
+
   return (
-    <main className="min-h-screen pt-16" style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)' }}>
-      <div className="max-w-5xl mx-auto px-8 py-12">
+    <main className="terminal-page">
+      <div className="terminal-wrapper">
         {/* Header */}
-        <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-apple-lg p-8 mb-8 border border-gray-100/50">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">FE-EKG Documentation</h1>
-          <p className="text-lg text-gray-600">
-            Financial Event Evolution Knowledge Graph - A comprehensive system for analyzing and visualizing financial events, their evolution patterns, and entity relationships.
+        <div className="terminal-header-section">
+          <div className="terminal-prompt">
+            <span className="prompt-symbol">$</span>
+            <span className="prompt-text">cd /feekg/docs</span>
+          </div>
+          <h1 className="terminal-title">FE-EKG Documentation Terminal</h1>
+          <p className="terminal-subtitle">
+            Financial Event Evolution Knowledge Graph - Technical Documentation
           </p>
         </div>
 
-        {/* Quick Start */}
-        <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-apple-lg p-8 mb-8 border border-gray-100/50">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Quick Start</h2>
-          <div className="space-y-4">
-            <div className="flex items-start gap-3">
-              <div className="w-8 h-8 bg-blue-500 text-white rounded-lg flex items-center justify-center font-bold text-sm flex-shrink-0">1</div>
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-1">Explore the Graph</h3>
-                <p className="text-sm text-gray-600 mb-2">Navigate to the <Link href="/graph" className="text-blue-600 hover:underline">Graph Visualization</Link> page to interactively explore financial events and their relationships.</p>
-                <ul className="text-sm text-gray-600 list-disc list-inside space-y-1">
-                  <li><strong>Click nodes</strong> to view event details in the sidebar</li>
-                  <li><strong>Selected nodes</strong> highlight with a gold border</li>
-                  <li>Use <strong>filters</strong> to narrow down by date, event type, or search query</li>
-                  <li>Try different <strong>layouts</strong>: Force-Directed, Circle, Grid, or Hierarchical</li>
-                </ul>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-3">
-              <div className="w-8 h-8 bg-blue-500 text-white rounded-lg flex items-center justify-center font-bold text-sm flex-shrink-0">2</div>
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-1">View Event Connections</h3>
-                <p className="text-sm text-gray-600 mb-2">Click "View Connections" in the event details to see how events evolve over time.</p>
-                <ul className="text-sm text-gray-600 list-disc list-inside space-y-1">
-                  <li><strong>Outgoing links</strong>: Events that evolved FROM this event</li>
-                  <li><strong>Incoming links</strong>: Events that LED TO this event</li>
-                  <li><strong>Evolution scores</strong>: Based on temporal, semantic, and causality analysis</li>
-                </ul>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-3">
-              <div className="w-8 h-8 bg-blue-500 text-white rounded-lg flex items-center justify-center font-bold text-sm flex-shrink-0">3</div>
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-1">Explore the Timeline</h3>
-                <p className="text-sm text-gray-600 mb-2">Visit the <Link href="/timeline" className="text-blue-600 hover:underline">Timeline</Link> to see events in chronological order.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Features */}
-        <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-apple-lg p-8 mb-8 border border-gray-100/50">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Key Features</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl border border-blue-200">
-              <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
-                <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                </svg>
-                Interactive Graph Visualization
-              </h3>
-              <p className="text-sm text-gray-700">Cytoscape.js-powered graph with multiple layout algorithms and smooth interactions</p>
-            </div>
-
-            <div className="p-4 bg-gradient-to-r from-purple-50 to-purple-100 rounded-xl border border-purple-200">
-              <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
-                <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-                Evolution Analysis
-              </h3>
-              <p className="text-sm text-gray-700">Track event evolution using temporal, semantic, and causal scoring algorithms</p>
-            </div>
-
-            <div className="p-4 bg-gradient-to-r from-emerald-50 to-emerald-100 rounded-xl border border-emerald-200">
-              <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
-                <svg className="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4" />
-                </svg>
-                AllegroGraph Backend
-              </h3>
-              <p className="text-sm text-gray-700">Powered by AllegroGraph RDF triple store with SPARQL query support</p>
-            </div>
-
-            <div className="p-4 bg-gradient-to-r from-amber-50 to-amber-100 rounded-xl border border-amber-200">
-              <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
-                <svg className="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-                </svg>
-                Advanced Filtering
-              </h3>
-              <p className="text-sm text-gray-700">Filter by date range, event types, severity levels, and full-text search</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Graph Controls */}
-        <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-apple-lg p-8 mb-8 border border-gray-100/50">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Graph Controls</h2>
-          <div className="space-y-3">
-            <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
-              <div className="font-mono text-sm bg-white px-2 py-1 rounded border border-gray-300">Nodes</div>
-              <p className="text-sm text-gray-700">Adjust the number of nodes displayed (10-500). Higher values may impact performance.</p>
-            </div>
-            <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
-              <div className="font-mono text-sm bg-white px-2 py-1 rounded border border-gray-300">Min Score</div>
-              <p className="text-sm text-gray-700">Set minimum evolution score threshold (0.1-1.0) to filter weak connections.</p>
-            </div>
-            <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
-              <div className="font-mono text-sm bg-white px-2 py-1 rounded border border-gray-300">Layout</div>
-              <p className="text-sm text-gray-700">Choose visualization layout: Force-Directed (default), Circle, Grid, or Hierarchical.</p>
-            </div>
-            <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
-              <div className="font-mono text-sm bg-white px-2 py-1 rounded border border-gray-300">Group by Type</div>
-              <p className="text-sm text-gray-700">Organize nodes by event type for easier pattern recognition.</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Color Legend */}
-        <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-apple-lg p-8 mb-8 border border-gray-100/50">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Color Legend</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-              <div className="w-6 h-6 rounded-full" style={{ backgroundColor: '#ef4444' }}></div>
-              <span className="text-sm font-medium text-gray-900">High Severity Events</span>
-            </div>
-            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-              <div className="w-6 h-6 rounded-full" style={{ backgroundColor: '#f59e0b' }}></div>
-              <span className="text-sm font-medium text-gray-900">Medium Severity Events</span>
-            </div>
-            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-              <div className="w-6 h-6 rounded-full" style={{ backgroundColor: '#22c55e' }}></div>
-              <span className="text-sm font-medium text-gray-900">Low Severity Events</span>
-            </div>
-            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-              <div className="w-6 h-6 rounded" style={{ backgroundColor: '#3b82f6' }}></div>
-              <span className="text-sm font-medium text-gray-900">Entities (Banks, Companies, etc.)</span>
-            </div>
-            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-              <div className="w-6 h-6 rounded-full border-4" style={{ borderColor: '#fbbf24' }}></div>
-              <span className="text-sm font-medium text-gray-900">Selected Node (Gold Border)</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Technical Details */}
-        <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-apple-lg p-8 mb-8 border border-gray-100/50">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Technical Stack</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-            <div>
-              <h3 className="font-semibold text-gray-900 mb-2">Frontend</h3>
-              <ul className="space-y-1 text-gray-700">
-                <li>• Next.js 15.5 with App Router</li>
-                <li>• TypeScript for type safety</li>
-                <li>• Cytoscape.js for graph visualization</li>
-                <li>• TanStack Query for data fetching</li>
-                <li>• Tailwind CSS for styling</li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-semibold text-gray-900 mb-2">Backend</h3>
-              <ul className="space-y-1 text-gray-700">
-                <li>• Python Flask REST API</li>
-                <li>• AllegroGraph RDF triple store</li>
-                <li>• SPARQL query language</li>
-                <li>• Evolution scoring algorithms</li>
-                <li>• Deployed on Railway</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        {/* Back to Home */}
-        <div className="text-center">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl font-semibold hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        {/* Search & Filter */}
+        <div className="terminal-controls">
+          <div className="search-box">
+            <svg className="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
-            Back to Home
+            <input
+              type="text"
+              placeholder="Search documentation... (Ctrl+K)"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="search-input"
+            />
+            {searchTerm && (
+              <button onClick={() => setSearchTerm('')} className="search-clear">×</button>
+            )}
+          </div>
+
+          <div className="category-filter">
+            {categories.map(cat => (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                className={`category-btn ${selectedCategory === cat ? 'active' : ''}`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Stats */}
+        <div className="terminal-stats">
+          <div className="stat-item">
+            <span className="stat-label">Total Docs:</span>
+            <span className="stat-value">{DOCS.length}</span>
+          </div>
+          <div className="stat-item">
+            <span className="stat-label">Categories:</span>
+            <span className="stat-value">{categories.length - 1}</span>
+          </div>
+          <div className="stat-item">
+            <span className="stat-label">Filtered:</span>
+            <span className="stat-value">{filteredDocs.length}</span>
+          </div>
+        </div>
+
+        {/* Documentation Grid */}
+        <div className="docs-grid">
+          {Object.entries(groupedDocs).map(([category, docs]) => (
+            <div key={category} className="category-section">
+              <h2 className="category-title">
+                <span className="category-icon">▶</span>
+                {category}
+              </h2>
+              <div className="docs-list">
+                {docs.map(doc => (
+                  <Link key={doc.path} href={doc.path} className="doc-card">
+                    <div className="doc-header">
+                      <svg className="doc-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                      <h3 className="doc-title">{doc.title}</h3>
+                    </div>
+                    <p className="doc-description">{doc.description}</p>
+                    <div className="doc-footer">
+                      <span className="doc-path">{doc.path}.md</span>
+                      <span className="doc-arrow">→</span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* No Results */}
+        {filteredDocs.length === 0 && (
+          <div className="no-results">
+            <svg className="no-results-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M12 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <p>No documentation found matching your search</p>
+            <button onClick={() => { setSearchTerm(''); setSelectedCategory('All'); }} className="reset-btn">
+              Reset Filters
+            </button>
+          </div>
+        )}
+
+        {/* Footer */}
+        <div className="terminal-footer">
+          <Link href="/" className="footer-link">
+            ← Back to Home
           </Link>
+          <div className="footer-info">
+            <span>Press <kbd>Ctrl+K</kbd> to search</span>
+          </div>
         </div>
       </div>
+
+      <style jsx global>{`
+        .terminal-page {
+          min-height: 100vh;
+          background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+          padding: 2rem;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .terminal-page::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: repeating-linear-gradient(
+            0deg,
+            rgba(0, 0, 0, 0.15),
+            rgba(0, 0, 0, 0.15) 1px,
+            transparent 1px,
+            transparent 2px
+          );
+          pointer-events: none;
+          z-index: 1;
+        }
+
+        .terminal-wrapper {
+          max-width: 1400px;
+          margin: 0 auto;
+          position: relative;
+          z-index: 2;
+        }
+
+        .terminal-header-section {
+          margin-bottom: 2rem;
+        }
+
+        .terminal-prompt {
+          font-family: 'JetBrains Mono', 'Courier New', monospace;
+          font-size: 14px;
+          color: #666;
+          margin-bottom: 1rem;
+        }
+
+        .prompt-symbol {
+          color: #a3be8c;
+          margin-right: 0.5rem;
+        }
+
+        .prompt-text {
+          color: #88c0d0;
+        }
+
+        .terminal-title {
+          font-family: 'JetBrains Mono', 'Courier New', monospace;
+          font-size: 36px;
+          font-weight: bold;
+          color: #fff;
+          margin: 0 0 0.5rem 0;
+          text-shadow: 0 0 20px rgba(163, 190, 140, 0.3);
+        }
+
+        .terminal-subtitle {
+          font-family: 'JetBrains Mono', 'Courier New', monospace;
+          font-size: 14px;
+          color: #999;
+          margin: 0;
+        }
+
+        .terminal-controls {
+          background: #0a0a0a;
+          border: 1px solid #333;
+          border-radius: 8px;
+          padding: 1.5rem;
+          margin-bottom: 1.5rem;
+        }
+
+        .search-box {
+          position: relative;
+          margin-bottom: 1rem;
+        }
+
+        .search-icon {
+          position: absolute;
+          left: 12px;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 20px;
+          height: 20px;
+          color: #666;
+          pointer-events: none;
+        }
+
+        .search-input {
+          width: 100%;
+          background: #1a1a1a;
+          border: 1px solid #333;
+          border-radius: 6px;
+          padding: 10px 40px 10px 40px;
+          font-family: 'JetBrains Mono', 'Courier New', monospace;
+          font-size: 14px;
+          color: #e0e0e0;
+          outline: none;
+          transition: all 0.2s;
+        }
+
+        .search-input:focus {
+          border-color: #a3be8c;
+          box-shadow: 0 0 0 2px rgba(163, 190, 140, 0.1);
+        }
+
+        .search-input::placeholder {
+          color: #666;
+        }
+
+        .search-clear {
+          position: absolute;
+          right: 12px;
+          top: 50%;
+          transform: translateY(-50%);
+          background: none;
+          border: none;
+          color: #666;
+          font-size: 24px;
+          cursor: pointer;
+          transition: color 0.2s;
+        }
+
+        .search-clear:hover {
+          color: #ef5350;
+        }
+
+        .category-filter {
+          display: flex;
+          gap: 0.5rem;
+          flex-wrap: wrap;
+        }
+
+        .category-btn {
+          background: #1a1a1a;
+          border: 1px solid #333;
+          border-radius: 6px;
+          padding: 6px 12px;
+          font-family: 'JetBrains Mono', 'Courier New', monospace;
+          font-size: 12px;
+          color: #999;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+
+        .category-btn:hover {
+          border-color: #555;
+          color: #e0e0e0;
+        }
+
+        .category-btn.active {
+          background: #a3be8c;
+          border-color: #a3be8c;
+          color: #0a0a0a;
+        }
+
+        .terminal-stats {
+          display: flex;
+          gap: 2rem;
+          margin-bottom: 2rem;
+          font-family: 'JetBrains Mono', 'Courier New', monospace;
+          font-size: 14px;
+        }
+
+        .stat-item {
+          color: #999;
+        }
+
+        .stat-label {
+          margin-right: 0.5rem;
+        }
+
+        .stat-value {
+          color: #a3be8c;
+          font-weight: 600;
+        }
+
+        .docs-grid {
+          display: flex;
+          flex-direction: column;
+          gap: 2rem;
+        }
+
+        .category-section {
+          background: #0a0a0a;
+          border: 1px solid #333;
+          border-radius: 8px;
+          padding: 1.5rem;
+        }
+
+        .category-title {
+          font-family: 'JetBrains Mono', 'Courier New', monospace;
+          font-size: 18px;
+          font-weight: 600;
+          color: #a3be8c;
+          margin: 0 0 1rem 0;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+
+        .category-icon {
+          font-size: 12px;
+        }
+
+        .docs-list {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+          gap: 1rem;
+        }
+
+        .doc-card {
+          background: #1a1a1a;
+          border: 1px solid #333;
+          border-radius: 6px;
+          padding: 1rem;
+          text-decoration: none;
+          transition: all 0.2s;
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+
+        .doc-card:hover {
+          border-color: #a3be8c;
+          background: #1f1f1f;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(163, 190, 140, 0.1);
+        }
+
+        .doc-header {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+
+        .doc-icon {
+          width: 20px;
+          height: 20px;
+          color: #88c0d0;
+          flex-shrink: 0;
+        }
+
+        .doc-title {
+          font-family: 'JetBrains Mono', 'Courier New', monospace;
+          font-size: 14px;
+          font-weight: 600;
+          color: #fff;
+          margin: 0;
+        }
+
+        .doc-description {
+          font-family: 'JetBrains Mono', 'Courier New', monospace;
+          font-size: 12px;
+          color: #999;
+          margin: 0;
+          line-height: 1.5;
+        }
+
+        .doc-footer {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-top: auto;
+          padding-top: 0.5rem;
+          border-top: 1px solid #2a2a2a;
+        }
+
+        .doc-path {
+          font-family: 'JetBrains Mono', 'Courier New', monospace;
+          font-size: 11px;
+          color: #666;
+        }
+
+        .doc-arrow {
+          color: #a3be8c;
+        }
+
+        .no-results {
+          text-align: center;
+          padding: 3rem;
+          color: #999;
+        }
+
+        .no-results-icon {
+          width: 64px;
+          height: 64px;
+          margin: 0 auto 1rem;
+          color: #666;
+        }
+
+        .reset-btn {
+          margin-top: 1rem;
+          background: #1a1a1a;
+          border: 1px solid #333;
+          border-radius: 6px;
+          padding: 8px 16px;
+          font-family: 'JetBrains Mono', 'Courier New', monospace;
+          font-size: 12px;
+          color: #a3be8c;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+
+        .reset-btn:hover {
+          border-color: #a3be8c;
+          background: #1f1f1f;
+        }
+
+        .terminal-footer {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-top: 3rem;
+          padding-top: 1.5rem;
+          border-top: 1px solid #333;
+          font-family: 'JetBrains Mono', 'Courier New', monospace;
+        }
+
+        .footer-link {
+          color: #88c0d0;
+          text-decoration: none;
+          font-size: 14px;
+          transition: color 0.2s;
+        }
+
+        .footer-link:hover {
+          color: #8fbcbb;
+        }
+
+        .footer-info {
+          font-size: 12px;
+          color: #666;
+        }
+
+        .footer-info kbd {
+          background: #1a1a1a;
+          border: 1px solid #333;
+          border-radius: 3px;
+          padding: 2px 6px;
+          font-family: 'JetBrains Mono', 'Courier New', monospace;
+          font-size: 11px;
+        }
+
+        @media (max-width: 768px) {
+          .terminal-page {
+            padding: 1rem;
+          }
+
+          .terminal-title {
+            font-size: 24px;
+          }
+
+          .docs-list {
+            grid-template-columns: 1fr;
+          }
+
+          .terminal-stats {
+            flex-direction: column;
+            gap: 0.5rem;
+          }
+
+          .category-filter {
+            gap: 0.25rem;
+          }
+
+          .terminal-footer {
+            flex-direction: column;
+            gap: 1rem;
+            text-align: center;
+          }
+        }
+      `}</style>
     </main>
   );
 }

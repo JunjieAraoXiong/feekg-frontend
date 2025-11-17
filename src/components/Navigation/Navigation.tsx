@@ -10,7 +10,7 @@ export function Navigation() {
     { name: 'Home', path: '/', icon: HomeIcon },
     { name: 'Graph', path: '/graph', icon: GraphIcon },
     { name: 'Timeline', path: '/timeline', icon: TimelineIcon },
-    { name: 'Docs', path: 'https://web-production-cc9f1.up.railway.app/docs_hub.html', icon: DocsIcon, external: true },
+    { name: 'Docs', path: '/docs', icon: DocsIcon },
   ];
 
   return (
@@ -33,26 +33,8 @@ export function Navigation() {
           {/* Navigation Links */}
           <div className="flex items-center gap-2">
             {navItems.map((item) => {
-              const isActive = !item.external && pathname === item.path;
+              const isActive = pathname === item.path;
               const Icon = item.icon;
-
-              if (item.external) {
-                return (
-                  <a
-                    key={item.path}
-                    href={item.path}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-200 text-gray-600 hover:text-gray-900 hover:bg-gray-50 active:scale-95"
-                  >
-                    <Icon className="w-5 h-5" />
-                    <span className="text-sm font-medium">{item.name}</span>
-                    <svg className="w-3 h-3 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                    </svg>
-                  </a>
-                );
-              }
 
               return (
                 <Link
