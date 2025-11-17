@@ -14,24 +14,24 @@ export function Navigation() {
   ];
 
   return (
-    <nav className="bg-white/80 backdrop-blur-xl border-b border-gray-200/50 shadow-apple sticky top-0 z-50">
-      <div className="max-w-full px-8">
-        <div className="flex items-center justify-between h-16">
+    <nav className="terminal-nav">
+      <div className="terminal-nav-container">
+        <div className="terminal-nav-content">
           {/* Logo/Brand */}
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform shadow-apple">
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <Link href="/" className="terminal-brand">
+            <div className="terminal-brand-icon">
+              <svg className="terminal-brand-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
-            <div>
-              <h1 className="text-lg font-bold text-gray-900">FE-EKG</h1>
-              <p className="text-xs text-gray-500">Financial Event Knowledge Graph</p>
+            <div className="terminal-brand-text">
+              <h1 className="terminal-brand-title">FE-EKG</h1>
+              <p className="terminal-brand-subtitle">Financial Event Knowledge Graph</p>
             </div>
           </Link>
 
           {/* Navigation Links */}
-          <div className="flex items-center gap-2">
+          <div className="terminal-nav-links">
             {navItems.map((item) => {
               const isActive = pathname === item.path;
               const Icon = item.icon;
@@ -40,29 +40,201 @@ export function Navigation() {
                 <Link
                   key={item.path}
                   href={item.path}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-200 ${
-                    isActive
-                      ? 'bg-blue-500 text-white shadow-apple'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 active:scale-95'
-                  }`}
+                  className={`terminal-nav-link ${isActive ? 'terminal-nav-link-active' : ''}`}
                 >
-                  <Icon className="w-5 h-5" />
-                  <span className="text-sm font-medium">{item.name}</span>
+                  <Icon className="terminal-nav-icon" />
+                  <span className="terminal-nav-label">{item.name}</span>
                 </Link>
               );
             })}
           </div>
 
-          {/* Right Side - Optional Actions */}
-          <div className="flex items-center gap-3">
-            {/* API Status Indicator */}
-            <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-50 rounded-lg">
-              <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-              <span className="text-xs text-emerald-700 font-medium">API Connected</span>
+          {/* Right Side - API Status */}
+          <div className="terminal-nav-status">
+            <div className="terminal-status-indicator">
+              <div className="terminal-status-dot terminal-pulse"></div>
+              <span className="terminal-status-text">SYSTEM OK</span>
             </div>
           </div>
         </div>
       </div>
+
+      <style jsx>{`
+        .terminal-nav {
+          background: var(--terminal-bg-secondary);
+          border-bottom: 1px solid var(--terminal-border);
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+          position: sticky;
+          top: 0;
+          z-index: 50;
+        }
+
+        .terminal-nav-container {
+          max-width: 100%;
+          padding: 0 2rem;
+        }
+
+        .terminal-nav-content {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          height: 60px;
+        }
+
+        .terminal-brand {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          text-decoration: none;
+          transition: opacity 0.2s;
+        }
+
+        .terminal-brand:hover {
+          opacity: 0.8;
+        }
+
+        .terminal-brand-icon {
+          width: 36px;
+          height: 36px;
+          background: var(--terminal-green);
+          border-radius: 6px;
+          display: flex;
+          align-items: center;
+          justify-center;
+          transition: transform 0.2s;
+        }
+
+        .terminal-brand:hover .terminal-brand-icon {
+          transform: scale(1.05);
+        }
+
+        .terminal-brand-svg {
+          width: 22px;
+          height: 22px;
+          color: var(--terminal-bg-primary);
+        }
+
+        .terminal-brand-title {
+          font-family: var(--terminal-font);
+          font-size: 16px;
+          font-weight: 700;
+          color: var(--terminal-green);
+          margin: 0;
+          letter-spacing: 0.5px;
+        }
+
+        .terminal-brand-subtitle {
+          font-family: var(--terminal-font);
+          font-size: 10px;
+          color: var(--terminal-text-dim);
+          margin: 0;
+          letter-spacing: 0.3px;
+        }
+
+        .terminal-nav-links {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+
+        .terminal-nav-link {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 8px 16px;
+          border-radius: 6px;
+          text-decoration: none;
+          font-family: var(--terminal-font);
+          font-size: 13px;
+          font-weight: 500;
+          color: var(--terminal-text-muted);
+          transition: all 0.2s;
+          border: 1px solid transparent;
+        }
+
+        .terminal-nav-link:hover {
+          color: var(--terminal-green);
+          background: var(--terminal-bg-primary);
+          border-color: var(--terminal-border);
+        }
+
+        .terminal-nav-link-active {
+          color: var(--terminal-bg-primary);
+          background: var(--terminal-green);
+          border-color: var(--terminal-green);
+        }
+
+        .terminal-nav-link-active:hover {
+          background: var(--terminal-green-bright);
+          border-color: var(--terminal-green-bright);
+        }
+
+        .terminal-nav-icon {
+          width: 16px;
+          height: 16px;
+        }
+
+        .terminal-nav-label {
+          font-weight: 600;
+        }
+
+        .terminal-nav-status {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+        }
+
+        .terminal-status-indicator {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 6px 12px;
+          background: var(--terminal-bg-primary);
+          border: 1px solid var(--terminal-border);
+          border-radius: 6px;
+        }
+
+        .terminal-status-dot {
+          width: 8px;
+          height: 8px;
+          background: var(--terminal-green);
+          border-radius: 50%;
+        }
+
+        .terminal-status-text {
+          font-family: var(--terminal-font);
+          font-size: 11px;
+          color: var(--terminal-green);
+          font-weight: 600;
+          letter-spacing: 0.5px;
+        }
+
+        @media (max-width: 768px) {
+          .terminal-nav-container {
+            padding: 0 1rem;
+          }
+
+          .terminal-nav-content {
+            height: 56px;
+          }
+
+          .terminal-brand-subtitle {
+            display: none;
+          }
+
+          .terminal-nav-label {
+            display: none;
+          }
+
+          .terminal-nav-link {
+            padding: 8px 12px;
+          }
+
+          .terminal-status-text {
+            display: none;
+          }
+        }
+      `}</style>
     </nav>
   );
 }

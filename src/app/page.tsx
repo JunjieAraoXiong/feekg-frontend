@@ -22,91 +22,102 @@ export default function Home() {
   const hasError = statsError || eventsError;
 
   return (
-    <main className="min-h-screen pt-16" style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)' }}>
+    <main className="terminal-home">
       {/* Hero Section */}
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10"></div>
-        <div className="relative max-w-7xl mx-auto px-8 py-16">
-          <div className="text-center">
-            <h1 className="text-5xl font-bold text-white mb-4">
-              FE-EKG
-            </h1>
-            <p className="text-xl text-gray-300 mb-3">
-              Financial Event Evolution Knowledge Graph
-            </p>
-            <p className="text-base text-gray-400 max-w-2xl mx-auto mb-8">
-              Visualize and analyze complex financial events, their evolution patterns, and entity relationships using advanced graph technology and AllegroGraph RDF database.
-            </p>
+      <div className="terminal-hero">
+        <div className="terminal-hero-content">
+          {/* Terminal Prompt */}
+          <div className="terminal-prompt-line">
+            <span className="prompt-user">user@feekg</span>
+            <span className="prompt-separator">:</span>
+            <span className="prompt-path">~/financial-event-knowledge-graph</span>
+            <span className="prompt-symbol">$</span>
+            <span className="prompt-command terminal-blink">_</span>
+          </div>
 
-            {/* Quick Stats */}
-            {stats && !isLoading && (
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto mb-8">
-                <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20">
-                  <div className="text-3xl font-bold text-white mb-1">{stats.totalEvents?.toLocaleString() || 0}</div>
-                  <div className="text-xs text-gray-300">Events</div>
-                </div>
-                <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20">
-                  <div className="text-3xl font-bold text-white mb-1">{stats.totalEntities?.toLocaleString() || 0}</div>
-                  <div className="text-xs text-gray-300">Entities</div>
-                </div>
-                <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20">
-                  <div className="text-3xl font-bold text-white mb-1">{stats.evolutionLinks?.toLocaleString() || 0}</div>
-                  <div className="text-xs text-gray-300">Evolution Links</div>
-                </div>
-                <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20">
-                  <div className="text-3xl font-bold text-white mb-1">{stats.totalRelationships?.toLocaleString() || 0}</div>
-                  <div className="text-xs text-gray-300">Relationships</div>
-                </div>
+          {/* Title */}
+          <h1 className="terminal-hero-title terminal-glow-green">
+            FE-EKG
+          </h1>
+          <p className="terminal-hero-subtitle">
+            {'>'} Financial Event Evolution Knowledge Graph
+          </p>
+          <p className="terminal-hero-description">
+            Analyze complex financial events, evolution patterns, and entity relationships
+            <br />using advanced graph technology and AllegroGraph RDF database.
+          </p>
+
+          {/* Quick Stats */}
+          {stats && !isLoading && (
+            <div className="terminal-stats-grid">
+              <div className="terminal-stat">
+                <div className="terminal-stat-value">{stats.totalEvents?.toLocaleString() || 0}</div>
+                <div className="terminal-stat-label">Events</div>
               </div>
-            )}
-
-            {/* CTA Buttons */}
-            <div className="flex flex-wrap items-center justify-center gap-3">
-              <Link
-                href="/graph"
-                className="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl font-semibold hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 text-sm"
-              >
-                Explore Graph →
-              </Link>
-              <Link
-                href="/timeline"
-                className="px-6 py-3 bg-white/10 backdrop-blur-md text-white rounded-xl font-semibold hover:bg-white/20 transition-all duration-200 border border-white/20 text-sm"
-              >
-                View Timeline
-              </Link>
-              <Link
-                href="/docs"
-                className="px-6 py-3 bg-white/10 backdrop-blur-md text-white rounded-xl font-semibold hover:bg-white/20 transition-all duration-200 border border-white/20 text-sm"
-              >
-                Documentation
-              </Link>
+              <div className="terminal-stat">
+                <div className="terminal-stat-value">{stats.totalEntities?.toLocaleString() || 0}</div>
+                <div className="terminal-stat-label">Entities</div>
+              </div>
+              <div className="terminal-stat">
+                <div className="terminal-stat-value">{stats.evolutionLinks?.toLocaleString() || 0}</div>
+                <div className="terminal-stat-label">Ev Links</div>
+              </div>
+              <div className="terminal-stat">
+                <div className="terminal-stat-value">{stats.totalRelationships?.toLocaleString() || 0}</div>
+                <div className="terminal-stat-label">Relations</div>
+              </div>
             </div>
+          )}
+
+          {/* CTA Buttons */}
+          <div className="terminal-cta-buttons">
+            <Link href="/graph" className="terminal-button">
+              <svg className="button-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              </svg>
+              Explore Graph →
+            </Link>
+            <Link href="/timeline" className="terminal-button-secondary">
+              <svg className="button-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              View Timeline
+            </Link>
+            <Link href="/docs" className="terminal-button-secondary">
+              <svg className="button-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              Documentation
+            </Link>
           </div>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-8 py-8">
-        {/* API Status */}
-        <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-apple-lg p-6 mb-6 border border-gray-100/50">
-          <h2 className="text-xl font-bold text-gray-900 mb-3">System Status</h2>
+      <div className="terminal-main-content">
+        {/* System Status */}
+        <div className="terminal-container">
+          <div className="terminal-section-header">
+            <span className="terminal-prompt-symbol">$</span>
+            <span>systemctl status feekg-api</span>
+          </div>
 
           {isLoading && (
-            <div className="flex items-center gap-3">
-              <div className="animate-pulse w-3 h-3 bg-yellow-500 rounded-full"></div>
-              <p className="text-gray-600">Connecting to AllegroGraph backend...</p>
+            <div className="terminal-status-line">
+              <div className="terminal-spinner"></div>
+              <span className="terminal-text-muted">Connecting to AllegroGraph backend...</span>
             </div>
           )}
 
           {hasError && (
-            <div className="flex items-center gap-3">
-              <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+            <div className="terminal-status-line">
+              <span className="terminal-badge-error">●</span>
               <div>
-                <p className="text-red-600 font-medium">Failed to connect to API</p>
-                <p className="text-sm text-gray-600 mt-1">
-                  Make sure the Flask backend is running on {process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001"}
+                <p className="terminal-status-error">Failed to connect to API</p>
+                <p className="terminal-text-dim terminal-small">
+                  Endpoint: {process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001"}
                 </p>
-                <p className="text-sm text-red-500 mt-1">
+                <p className="terminal-text-dim terminal-small">
                   Error: {statsError?.message || eventsError?.message || "Unknown error"}
                 </p>
               </div>
@@ -114,47 +125,47 @@ export default function Home() {
           )}
 
           {!isLoading && !hasError && (
-            <div className="flex items-center gap-3">
-              <div className="w-3 h-3 bg-emerald-500 rounded-full animate-pulse"></div>
-              <p className="text-emerald-600 font-medium">AllegroGraph connected • System operational</p>
+            <div className="terminal-status-line">
+              <span className="terminal-badge-success terminal-pulse">●</span>
+              <span className="terminal-status-ok">active (running) • AllegroGraph connected</span>
             </div>
           )}
         </div>
 
         {/* Features */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-apple-lg p-6 border border-gray-100/50">
-            <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center mb-3">
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="terminal-features-grid">
+          <div className="terminal-card">
+            <div className="feature-icon">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
               </svg>
             </div>
-            <h3 className="text-lg font-bold text-gray-900 mb-2">Interactive Visualization</h3>
-            <p className="text-sm text-gray-600">
-              Explore financial events and entities with force-directed graph layouts, multiple view modes, and interactive filtering.
+            <h3 className="feature-title">Interactive Visualization</h3>
+            <p className="feature-description">
+              Force-directed graph layouts, multiple view modes, and interactive filtering for exploring financial events and entities.
             </p>
           </div>
 
-          <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-apple-lg p-6 border border-gray-100/50">
-            <div className="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center mb-3">
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="terminal-card">
+            <div className="feature-icon">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
-            <h3 className="text-lg font-bold text-gray-900 mb-2">Evolution Analysis</h3>
-            <p className="text-sm text-gray-600">
-              Track how financial events evolve over time using temporal, semantic, and causal relationship scoring algorithms.
+            <h3 className="feature-title">Evolution Analysis</h3>
+            <p className="feature-description">
+              Track event evolution over time using temporal, semantic, and causal relationship scoring algorithms.
             </p>
           </div>
 
-          <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-apple-lg p-6 border border-gray-100/50">
-            <div className="w-12 h-12 bg-emerald-500 rounded-xl flex items-center justify-center mb-3">
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="terminal-card">
+            <div className="feature-icon">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4" />
               </svg>
             </div>
-            <h3 className="text-lg font-bold text-gray-900 mb-2">AllegroGraph RDF</h3>
-            <p className="text-sm text-gray-600">
+            <h3 className="feature-title">AllegroGraph RDF</h3>
+            <p className="feature-description">
               Powered by AllegroGraph triple store with SPARQL queries for semantic web compatibility and advanced reasoning.
             </p>
           </div>
@@ -162,18 +173,17 @@ export default function Home() {
 
         {/* Top Entities */}
         {stats?.topEntities && stats.topEntities.length > 0 && (
-          <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-apple-lg p-6 mb-6 border border-gray-100/50">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Top Entities by Connections</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="terminal-container">
+            <div className="terminal-section-header">
+              <span className="terminal-prompt-symbol">$</span>
+              <span>top-entities --sort-by=connections --limit=6</span>
+            </div>
+            <div className="terminal-entities-grid">
               {stats.topEntities.slice(0, 6).map((entity, idx) => (
-                <div key={idx} className="flex justify-between items-center py-2 px-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl border border-gray-200/50 hover:shadow-md transition-shadow">
-                  <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 bg-blue-500 rounded-lg flex items-center justify-center text-white font-bold text-xs">
-                      {idx + 1}
-                    </div>
-                    <span className="font-semibold text-gray-900 text-sm">{entity.label}</span>
-                  </div>
-                  <span className="text-xs text-gray-600 bg-white px-2 py-1 rounded-lg">{entity.degree} connections</span>
+                <div key={idx} className="terminal-entity-item">
+                  <span className="entity-rank terminal-badge-success">#{idx + 1}</span>
+                  <span className="entity-label">{entity.label}</span>
+                  <span className="entity-degree terminal-code">{entity.degree}</span>
                 </div>
               ))}
             </div>
@@ -182,54 +192,324 @@ export default function Home() {
 
         {/* Recent Events */}
         {eventsData && eventsData.data.length > 0 && (
-          <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-apple-lg p-6 border border-gray-100/50">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Recent Events</h2>
+          <div className="terminal-container">
+            <div className="terminal-section-header">
+              <span className="terminal-prompt-symbol">$</span>
+              <span>recent-events --limit=5</span>
+            </div>
 
-            <div className="space-y-2">
+            <div className="terminal-events-list">
               {eventsData.data.slice(0, 5).map((event) => (
-                <div key={event.eventId} className="p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl hover:shadow-md transition-all duration-200 border border-gray-200/50">
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1">
-                      <h4 className="font-semibold text-gray-900 mb-1 text-sm">{event.label}</h4>
-                      <p className="text-xs text-gray-600">{event.type}</p>
-                    </div>
-                    <span className="text-xs text-gray-500 bg-white px-2 py-1 rounded-lg">{event.date}</span>
+                <div key={event.eventId} className="terminal-event-item">
+                  <div className="event-header">
+                    <span className="event-label">{event.label}</span>
+                    <span className="event-date terminal-badge">{event.date}</span>
                   </div>
+                  <div className="event-type terminal-text-dim">{event.type}</div>
                 </div>
               ))}
             </div>
 
-            <div className="mt-4 flex justify-between items-center">
-              <p className="text-xs text-gray-600">
+            <div className="terminal-footer-info">
+              <span className="terminal-text-dim">
                 Showing {eventsData.data.length} of {eventsData.total.toLocaleString()} total events
-              </p>
-              <Link
-                href="/graph"
-                className="text-xs font-medium text-blue-600 hover:text-blue-700"
-              >
+              </span>
+              <Link href="/graph" className="terminal-link">
                 View all →
               </Link>
             </div>
           </div>
         )}
       </div>
+
+      <style jsx>{`
+        .terminal-home {
+          min-height: 100vh;
+          position: relative;
+          z-index: 2;
+        }
+
+        .terminal-hero {
+          padding: 4rem 2rem;
+          position: relative;
+        }
+
+        .terminal-hero-content {
+          max-width: 1200px;
+          margin: 0 auto;
+        }
+
+        .terminal-prompt-line {
+          font-family: var(--terminal-font);
+          font-size: 14px;
+          margin-bottom: 2rem;
+        }
+
+        .prompt-user {
+          color: var(--terminal-green);
+        }
+
+        .prompt-separator {
+          color: var(--terminal-text-dim);
+          margin: 0 0.25rem;
+        }
+
+        .prompt-path {
+          color: var(--terminal-cyan);
+        }
+
+        .prompt-symbol {
+          color: var(--terminal-text-muted);
+          margin-left: 0.5rem;
+          margin-right: 0.25rem;
+        }
+
+        .prompt-command {
+          color: var(--terminal-text-primary);
+        }
+
+        .terminal-hero-title {
+          font-family: var(--terminal-font);
+          font-size: 56px;
+          font-weight: 700;
+          color: var(--terminal-green);
+          margin: 0 0 1rem 0;
+          letter-spacing: 2px;
+        }
+
+        .terminal-hero-subtitle {
+          font-family: var(--terminal-font);
+          font-size: 20px;
+          color: var(--terminal-cyan);
+          margin: 0 0 1rem 0;
+        }
+
+        .terminal-hero-description {
+          font-family: var(--terminal-font);
+          font-size: 14px;
+          color: var(--terminal-text-secondary);
+          max-width: 700px;
+          margin: 0 0 2.5rem 0;
+          line-height: 1.6;
+        }
+
+        .terminal-stats-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 1rem;
+          margin-bottom: 2rem;
+          max-width: 800px;
+        }
+
+        .terminal-cta-buttons {
+          display: flex;
+          gap: 1rem;
+          flex-wrap: wrap;
+        }
+
+        .button-icon {
+          width: 18px;
+          height: 18px;
+        }
+
+        .terminal-main-content {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 0 2rem 4rem;
+          display: flex;
+          flex-direction: column;
+          gap: 2rem;
+        }
+
+        .terminal-section-header {
+          font-family: var(--terminal-font);
+          font-size: 13px;
+          color: var(--terminal-text-muted);
+          margin-bottom: 1rem;
+          padding-bottom: 0.75rem;
+          border-bottom: 1px solid var(--terminal-border);
+        }
+
+        .terminal-status-line {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          padding: 1rem;
+        }
+
+        .terminal-status-ok {
+          font-family: var(--terminal-font);
+          font-size: 13px;
+          color: var(--terminal-green);
+        }
+
+        .terminal-status-error {
+          font-family: var(--terminal-font);
+          font-size: 13px;
+          color: var(--terminal-red);
+          margin: 0;
+        }
+
+        .terminal-small {
+          font-size: 11px;
+          margin: 0.25rem 0 0 0;
+        }
+
+        .terminal-features-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 1.5rem;
+        }
+
+        .feature-icon {
+          width: 40px;
+          height: 40px;
+          color: var(--terminal-green);
+          margin-bottom: 1rem;
+        }
+
+        .feature-icon svg {
+          width: 100%;
+          height: 100%;
+        }
+
+        .feature-title {
+          font-family: var(--terminal-font);
+          font-size: 16px;
+          font-weight: 600;
+          color: var(--terminal-text-primary);
+          margin: 0 0 0.75rem 0;
+        }
+
+        .feature-description {
+          font-family: var(--terminal-font);
+          font-size: 12px;
+          color: var(--terminal-text-muted);
+          line-height: 1.6;
+          margin: 0;
+        }
+
+        .terminal-entities-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 0.75rem;
+          padding: 1rem;
+        }
+
+        .terminal-entity-item {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          padding: 0.75rem;
+          background: var(--terminal-bg-secondary);
+          border: 1px solid var(--terminal-border);
+          border-radius: 6px;
+          transition: border-color 0.2s;
+        }
+
+        .terminal-entity-item:hover {
+          border-color: var(--terminal-green);
+        }
+
+        .entity-rank {
+          font-size: 11px;
+          flex-shrink: 0;
+        }
+
+        .entity-label {
+          font-family: var(--terminal-font);
+          font-size: 13px;
+          font-weight: 600;
+          color: var(--terminal-text-primary);
+          flex: 1;
+        }
+
+        .entity-degree {
+          font-size: 11px;
+        }
+
+        .terminal-events-list {
+          padding: 1rem;
+          display: flex;
+          flex-direction: column;
+          gap: 0.75rem;
+        }
+
+        .terminal-event-item {
+          padding: 1rem;
+          background: var(--terminal-bg-secondary);
+          border: 1px solid var(--terminal-border);
+          border-radius: 6px;
+          transition: border-color 0.2s;
+        }
+
+        .terminal-event-item:hover {
+          border-color: var(--terminal-green);
+        }
+
+        .event-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: start;
+          gap: 1rem;
+          margin-bottom: 0.5rem;
+        }
+
+        .event-label {
+          font-family: var(--terminal-font);
+          font-size: 13px;
+          font-weight: 600;
+          color: var(--terminal-text-primary);
+          flex: 1;
+        }
+
+        .event-date {
+          font-size: 10px;
+          flex-shrink: 0;
+        }
+
+        .event-type {
+          font-size: 11px;
+        }
+
+        .terminal-footer-info {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 1rem;
+          border-top: 1px solid var(--terminal-border);
+        }
+
+        @media (max-width: 768px) {
+          .terminal-hero {
+            padding: 2rem 1rem;
+          }
+
+          .terminal-hero-title {
+            font-size: 36px;
+          }
+
+          .terminal-hero-subtitle {
+            font-size: 16px;
+          }
+
+          .terminal-stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+
+          .terminal-features-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .terminal-entities-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .terminal-main-content {
+            padding: 0 1rem 2rem;
+          }
+        }
+      `}</style>
     </main>
-  );
-}
-
-// Stat Card Component
-function StatCard({ label, value, color }: { label: string; value: number; color: string }) {
-  const colorClasses = {
-    blue: 'bg-blue-50 text-blue-700 border-blue-200',
-    purple: 'bg-purple-50 text-purple-700 border-purple-200',
-    emerald: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-    orange: 'bg-orange-50 text-orange-700 border-orange-200',
-  }[color] || 'bg-gray-50 text-gray-700 border-gray-200';
-
-  return (
-    <div className={`p-6 rounded-lg border ${colorClasses}`}>
-      <p className="text-sm font-medium opacity-80">{label}</p>
-      <p className="text-3xl font-bold mt-2">{value.toLocaleString()}</p>
-    </div>
   );
 }

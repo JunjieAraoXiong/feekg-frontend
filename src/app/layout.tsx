@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
+import "../styles/terminal.css";
 import { Providers } from "./providers";
 import { Navigation } from "@/components/Navigation";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "FE-EKG - Financial Event Evolution Knowledge Graph",
@@ -18,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className="terminal-background" style={{ fontFamily: 'var(--terminal-font)', margin: 0, padding: 0 }}>
         <Providers>
           <Navigation />
           {children}
